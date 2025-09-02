@@ -1,0 +1,282 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  password   String
+  name       String
+  phone      String?
+  role       Role      @default(CUSTOMER)
+  status     Boolean   @default(true)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  cart       Cart?
+  orders     Order[]
+  addresses  Address[]
+  reviews    Review[]
+
+  @@map("_users")
+}
+
+model Product {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  brand       Brand          @relation(fields: [brandId], references: [id])
+  brandId     String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  status      Boolean        @default(true)
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+  images      ProductImage[]
+  variants    ProductVariant[]
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  reviews     Review[]
+
+  @@map("_products")
+}
+
+model ProductVariant {
+  id         String   @id @default(uuid())
+  sku        String   @unique
+  title      String
+  price      Float
+  stock      Int
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  currency   String   @default("AKZ")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_products_variants")
+}
+
+model Category {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  cover      String?
+  slug       String?
+  products   Product[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@map("_categories")
+}
+
+model Brand {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  slug       String?
+  products   Product[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@map("_brands")
+}
+
+model ProductImage {
+  id         String   @id @default(uuid())
+  url        String
+  type       String   @default("previews")
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_products_images")
+}
+
+model Cart {
+  id         String     @id @default(uuid())
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String     @unique
+  items      CartItem[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  @@map("_carts")
+}
+
+model CartItem {
+  id         String   @id @default(uuid())
+  cart       Cart     @relation(fields: [cartId], references: [id])
+  cartId     String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  quantity   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_carts_items")
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String
+  items      OrderItem[]
+  address    Address     @relation(fields: [addressId], references: [id])
+  addressId  String
+  total      Float
+  payment    Payment?
+  shipment   Shipment?
+  status     OrderStatus @default(PENDING)
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+
+  @@map("_orders")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  street     String
+  city       String
+  country    String
+  orders     Order[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_addresses")
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  quantity   Int
+  price      Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_orders_items")
+}
+
+model Payment {
+  id         String          @id @default(uuid())
+  order      Order           @relation(fields: [orderId], references: [id])
+  orderId    String          @unique
+  providerId String
+  provider   PaymentProvider @relation(fields: [providerId], references: [id])
+  methodId   String
+  method     PaymentMethod   @relation(fields: [methodId], references: [id])
+  amount     Float
+  currency   String          @default("AKZ") //AKZ | USD | EUR | R$ 
+  status     PaymentStatus   @default(PENDING)
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+
+  @@map("_payments")
+}
+
+model PaymentProvider {
+  id         String          @id @default(uuid())
+  name       String
+  code       String          @unique
+  payments   Payment[]
+  methods    PaymentMethod[]
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+
+  @@map("_payments_providers")
+}
+
+model PaymentMethod {
+  id         String          @id @default(uuid())
+  name       String
+  code       String?
+  provider   PaymentProvider @relation(fields: [providerId], references: [id])
+  providerId String
+  payments   Payment[]
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+
+  @@map("_payments_methods")
+}
+
+model Shipment {
+  id                String         @id @default(uuid())
+  order             Order          @relation(fields: [orderId], references: [id])
+  orderId           String         @unique
+  trackingId        String?
+  carrier           Carrier?       @relation(fields: [carrierId], references: [id])
+  carrierId         String?
+  status            ShipmentStatus
+  estimatedDelivery DateTime?
+  shipped_at        DateTime?
+  delivered_at      DateTime?
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+
+  @@map("_shipments")
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  rating     Int //1-5
+  comment    String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_reviews")
+}
+
+model Carrier {
+  id         String     @id @default(uuid())
+  name       String
+  code       String     @unique
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  Shipment   Shipment[]
+
+  @@map("_carrier")
+}
+
+//* Enums *//
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum ShipmentStatus {
+  NOT_SHIPPED
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
