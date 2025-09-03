@@ -26,14 +26,14 @@ export class AuthService {
 
     if (user && checkUnEncryptedPasswordIsValid(password, user.password)) {
       const userCurrent = convertUserLogged(user);
-      const token = this.jwt.sign(
+      const access_token = this.jwt.sign(
         { user: userCurrent },
         { expiresIn: '30d' },
       )
 
       const result: IUserCurrent = {
         user: userCurrent,
-        token
+        access_token
       }
       return result
 
@@ -60,14 +60,14 @@ export class AuthService {
     })
 
     const userCurrent = convertUserLogged(user);
-    const token = this.jwt.sign(
+    const access_token = this.jwt.sign(
       { user: userCurrent },
       { expiresIn: '30d' },
     )
 
     const result: IUserCurrent = {
       user: userCurrent,
-      token
+      access_token
     }
     return result;
   }

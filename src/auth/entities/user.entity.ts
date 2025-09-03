@@ -23,5 +23,5 @@ export interface IUserLogged {
 
 export interface IUserCurrent {
   user: IUserLogged;
-  token: string;
+  access_token: string;
 }
