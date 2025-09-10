@@ -32,16 +32,16 @@ model User {
 }
 
 model Product {
-  id          String         @id @default(uuid())
+  id          String           @id @default(uuid())
   name        String
   description String?
-  brand       Brand          @relation(fields: [brandId], references: [id])
+  brand       Brand            @relation(fields: [brandId], references: [id])
   brandId     String
-  category    Category       @relation(fields: [categoryId], references: [id])
+  category    Category         @relation(fields: [categoryId], references: [id])
   categoryId  String
-  status      Boolean        @default(true)
-  created_at  DateTime       @default(now())
-  updated_at  DateTime       @updatedAt
+  status      Boolean          @default(true)
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
   images      ProductImage[]
   variants    ProductVariant[]
   cartItems   CartItem[]
@@ -81,7 +81,8 @@ model Category {
 model Brand {
   id         String    @id @default(uuid())
   name       String    @unique
-  slug       String?
+  cover      String?
+  slug       String? 
   products   Product[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt

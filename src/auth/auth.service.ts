@@ -73,7 +73,7 @@ export class AuthService {
   }
 
   async updateCredentials(id: string, data: IUpdateCredentials): Promise<IUserLogged | Error> {
-    const { email, currentPassword, newPassword } = data;
+    const { currentPassword, newPassword } = data;
     const user = await this.prisma.user.findFirst({
       where: { id }
     })
@@ -82,7 +82,6 @@ export class AuthService {
       checkUnEncryptedPasswordIsValid(currentPassword, user.password)) {
       const updateUser = await this.prisma.user.update({
         data: {
-          email,
           password: hashPassword(newPassword)
         },
         where: { id }

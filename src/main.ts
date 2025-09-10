@@ -19,11 +19,20 @@ async function bootstrap() {
     type: VersioningType.URI
   })
 
+  app.enableCors({
+    origin: [
+      'http://localhost:3000', // front-end app
+      'http://127.0.0.1:3000',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   app.use((req, res, next) => {
     req.user = { roles: ['admin'] }; // 👈 change roles to test
     next();
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3333);
 }
 bootstrap();
