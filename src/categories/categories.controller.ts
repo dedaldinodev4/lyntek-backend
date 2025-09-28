@@ -1,6 +1,7 @@
 import { 
   Controller, Get, Post, Body, Param, Delete, Version, 
-  Put, UseGuards, UseInterceptors, UploadedFile
+  Put, UseGuards, UseInterceptors, UploadedFile,
+  Res
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -8,9 +9,10 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
-import type { IUploadCoverDto } from './dto/upload-cover-category';
+import { extname, join } from 'path';
+import { createReadStream } from 'fs';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Response } from 'express';
 
 @Controller('categories')
 @UseGuards(RolesGuard)
@@ -66,6 +68,14 @@ export class CategoriesController {
   @Roles('admin')
   delete(@Param('id') id: string ) {
     return this.categoriesService.delete(id);
+  }
+
+  @Get('/images/:filename')
+  @Version('1')
+  @Roles('admin')
+  getCover(@Param('filename') filename: string, @Res() response: Response ) {
+    const imagePath = join(process.cwd(), 'public', 'uploads', 'categories', filename)
+    return createReadStream(imagePath).pipe(response)
   }
 
 }

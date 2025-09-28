@@ -89,7 +89,7 @@ export class CategoriesService {
     }
     const categoryUpload = await this.prisma.category.update({
       data: {
-        cover: `/public/uploads/categories/${file.filename}`
+        cover: `uploads/categories/${file.filename}`
       },
       where: { id }
     })
@@ -98,6 +98,7 @@ export class CategoriesService {
 
   } 
 
+  
 
 
 }

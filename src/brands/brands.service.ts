@@ -67,4 +67,28 @@ export class BrandsService {
       where: { id }
     })
   }
+
+  async uploadCover (id: string, file: Express.Multer.File): Promise<Brand | Error> {
+    const brand = await this.prisma.brand.findFirst({
+      where: { id }
+    })
+
+    if (!brand) {
+      throw new NotFoundException('Braand does not exist.')
+    }
+
+    if (!file) {
+      throw new BadRequestException('No file provided')
+    }
+    const brandUpload = await this.prisma.brand.update({
+      data: {
+        cover: `uploads/brands/${file.filename}`
+      },
+      where: { id }
+    })
+
+    return brandUpload;
+
+  }
+  
 }
