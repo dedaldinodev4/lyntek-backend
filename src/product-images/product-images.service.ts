@@ -24,7 +24,7 @@ export class ProductImagesService {
 
     const productImage = await this.prisma.productImage.create({
       data: {
-        url: `/public/uploads/products/${file.filename}`,
+        url: `uploads/products/${file.filename}`,
         productId
       }
     })

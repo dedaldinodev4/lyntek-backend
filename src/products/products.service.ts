@@ -38,7 +38,14 @@ export class ProductsService {
 
   async findByName(name: string): Promise<Product | null> {
     const product = await this.prisma.product.findFirst({
-      where: { name }
+      where: { name },
+      include: { 
+        brand: true,
+        category: true,
+        images: true,
+        reviews: true,
+        variants: true, 
+      }
     })
 
     return product;
@@ -46,15 +53,12 @@ export class ProductsService {
 
   async findAll(): Promise<Product[]> {
     const products = await this.prisma.product.findMany({
-      include: {
-        category: {
-          select: { id: true, name: true, slug: true, cover: true }
-        },
-        brand: {
-          select: { id: true, name: true, slug: true }
-        },
-        variants: true,
-        images: true
+      include: { 
+        brand: true,
+        category: true,
+        images: true,
+        reviews: true,
+        variants: true, 
       }
     })
     return products;
@@ -63,15 +67,12 @@ export class ProductsService {
   async findOne(id: string): Promise<Product | Error> {
     const product = await this.prisma.product.findFirst({
       where: { id },
-      include: {
-        category: {
-          select: { id: true, name: true, slug: true, cover: true }
-        },
-        brand: {
-          select: { id: true, name: true, slug: true }
-        },
-        variants: true,
-        images: true
+      include: { 
+        brand: true,
+        category: true,
+        images: true,
+        reviews: true,
+        variants: true, 
       }
     })
 
