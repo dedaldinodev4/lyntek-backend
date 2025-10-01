@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDetailDto } from './dto/create-product-detail.dto';
 import { UpdateProductDetailDto } from './dto/update-product-detail.dto';
-import type { PrismaService } from 'src/database/prisma/prisma.service';
-import type { ProductsService } from 'src/products/products.service';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { ProductsService } from 'src/products/products.service';
 import type { ProductDetail } from './entities/product-detail.entity';
 
 @Injectable()
@@ -70,7 +70,7 @@ export class ProductDetailsService {
     return productDetail;
   }
 
-  async remove(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const productDetailExist = await this.findOne(id)
     if (!productDetailExist) {
       throw new NotFoundException(`ProductDetail does not exist.`)

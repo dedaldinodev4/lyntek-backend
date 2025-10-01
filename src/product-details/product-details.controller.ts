@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { ProductDetailsService } from './product-details.service';
 import { CreateProductDetailDto } from './dto/create-product-detail.dto';
 import { UpdateProductDetailDto } from './dto/update-product-detail.dto';
 
-@Controller('product-details')
+@Controller('products_details')
 export class ProductDetailsController {
   constructor(private readonly productDetailsService: ProductDetailsService) {}
 
   @Post()
-  create(@Body() createProductDetailDto: CreateProductDetailDto) {
-    return this.productDetailsService.create(createProductDetailDto);
+  create(@Body() data: CreateProductDetailDto) {
+    return this.productDetailsService.create(data);
   }
 
   @Get()
@@ -19,16 +19,21 @@ export class ProductDetailsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.productDetailsService.findOne(+id);
+    return this.productDetailsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDetailDto: UpdateProductDetailDto) {
-    return this.productDetailsService.update(+id, updateProductDetailDto);
+  @Get('byProduct/:productId')
+  findByProduct(@Param('productId') productId: string) {
+    return this.productDetailsService.findByProduct(productId);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() data: UpdateProductDetailDto) {
+    return this.productDetailsService.update(id, data);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productDetailsService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.productDetailsService.delete(id);
   }
 }
