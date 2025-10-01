@@ -125,9 +125,9 @@ model ProductDetails {
   wireless_standby_time Boolean?
   connectionType        String?
   connectors            String?
-  bluetooth             String?
-  noise_cancelling      String?
-  sound_isolating       String?
+  bluetooth             Boolean?
+  noise_cancelling      Boolean?
+  sound_isolating       Boolean?
   warranty              String?
   storage               String?
 

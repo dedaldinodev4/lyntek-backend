@@ -1,0 +1,30 @@
+export class ProductDetail {
+  id: string;
+  productId: string;
+  height: string | null;
+  width: string | null;
+  thickness: string | null;
+  processor: string | null;
+  screen: string | null;
+  operating_system: string | null;
+  ram: string | null;
+  ssd: string | null;
+  ports: string | null;
+  graphic: string | null;
+  back_camera: string | null;
+  front_camera: string | null;
+  battery: string | null;
+  frequency_response: string | null;
+  microphone: boolean | null;
+  wireless: boolean | null;
+  wireless_standby_time: boolean | null;
+  connectionType: string | null;
+  connectors: string | null;
+  bluetooth: boolean | null;
+  noise_cancelling: boolean | null;
+  sound_isolating: boolean | null;
+  storage: string | null;
+  warranty: string | null;
+  created_at: Date;
+  updated_at: Date;
+}

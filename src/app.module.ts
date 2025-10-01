@@ -25,6 +25,7 @@ import { ProductVariantsModule } from './product-variants/product-variants.modul
 import { PaymentProvidersModule } from './payment-providers/payment-providers.module';
 import { PaymentMethodsModule } from './payment-methods/payment-methods.module';
 import { CarrierModule } from './carrier/carrier.module';
+import { ProductDetailsModule } from './product-details/product-details.module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { CarrierModule } from './carrier/carrier.module';
     CartItemsModule, ProductsModule, ProductImagesModule, 
     AddressesModule, OrdersModule, PaymentsModule, ShipmentsModule, 
     ReviewsModule, OrderItemsModule, BrandsModule, ProductVariantsModule, 
-    PaymentProvidersModule, PaymentMethodsModule, CarrierModule
+    PaymentProvidersModule, PaymentMethodsModule, CarrierModule, ProductDetailsModule
   ],
   controllers: [AppController],
   providers: [
