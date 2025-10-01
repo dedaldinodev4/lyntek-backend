@@ -29,7 +29,11 @@ export class BrandsService {
   }
 
   async findAll (): Promise<Brand[]> {
-    const brands = await this.prisma.brand.findMany({})
+    const brands = await this.prisma.brand.findMany({
+      include: {
+        _count: true,
+      }
+    })
     return brands;
   }
 

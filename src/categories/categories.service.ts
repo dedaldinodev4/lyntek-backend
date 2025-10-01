@@ -1,4 +1,4 @@
-import { 
+import {
   BadRequestException, Injectable, NotFoundException
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -24,7 +24,11 @@ export class CategoriesService {
   }
 
   async findAll(): Promise<Category[]> {
-    const categories = await this.prisma.category.findMany({})
+    const categories = await this.prisma.category.findMany({
+      include: {
+        _count: true
+      }
+    })
     return categories;
   }
 
@@ -75,7 +79,7 @@ export class CategoriesService {
     })
   }
 
-  async uploadCover (id: string, file: Express.Multer.File): Promise<Category | Error> {
+  async uploadCover(id: string, file: Express.Multer.File): Promise<Category | Error> {
     const category = await this.prisma.category.findFirst({
       where: { id }
     })
@@ -96,9 +100,9 @@ export class CategoriesService {
 
     return categoryUpload;
 
-  } 
+  }
 
-  
+
 
 
 }

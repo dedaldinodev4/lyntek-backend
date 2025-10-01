@@ -56,7 +56,7 @@ export class ProductsService {
       include: { 
         brand: true,
         category: true,
-        images: true,
+        images: { orderBy: { created_at: 'asc' }},
         reviews: true,
         variants: true, 
       }
