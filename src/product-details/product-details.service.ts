@@ -32,6 +32,18 @@ export class ProductDetailsService {
     return productDetails;
   }
 
+  async findByProduct(productId: string): Promise<ProductDetail | Error> {
+    const productDetail = await this.prisma.productDetails.findFirst({
+      where: {
+        productId
+      }
+    })
+    if (!productDetail) {
+      throw new NotFoundException(`ProductDetail does not exist.`)
+    }
+    return productDetail;
+  }
+
   async findOne(id: string): Promise<ProductDetail | Error> {
     const productDetail = await this.prisma.productDetails.findFirst({
       where: {
