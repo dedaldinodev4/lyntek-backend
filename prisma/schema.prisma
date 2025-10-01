@@ -32,21 +32,22 @@ model User {
 }
 
 model Product {
-  id          String           @id @default(uuid())
-  name        String
-  description String?
-  brand       Brand            @relation(fields: [brandId], references: [id])
-  brandId     String
-  category    Category         @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  status      Boolean          @default(true)
-  created_at  DateTime         @default(now())
-  updated_at  DateTime         @updatedAt
-  images      ProductImage[]
-  variants    ProductVariant[]
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  reviews     Review[]
+  id             String           @id @default(uuid())
+  name           String
+  description    String?
+  brand          Brand            @relation(fields: [brandId], references: [id])
+  brandId        String
+  category       Category         @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  status         Boolean          @default(true)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  images         ProductImage[]
+  variants       ProductVariant[]
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+  reviews        Review[]
+  productDetails ProductDetails[]
 
   @@map("_products")
 }
@@ -82,7 +83,7 @@ model Brand {
   id         String    @id @default(uuid())
   name       String    @unique
   cover      String?
-  slug       String? 
+  slug       String?
   products   Product[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
@@ -100,6 +101,42 @@ model ProductImage {
   updated_at DateTime @updatedAt
 
   @@map("_products_images")
+}
+
+//* ProductDetails *//
+model ProductDetails {
+  id                    String   @id @default(uuid())
+  height                String?
+  width                 String?
+  thickness             String?
+  processor             String?
+  screen                String?
+  operating_system      String?
+  ram                   String?
+  ssd                   String?
+  ports                 String?
+  graphic               String?
+  back_camera           String?
+  front_camera          String?
+  battery               String?
+  frequency_response    String?
+  microphone            Boolean?
+  wireless              Boolean?
+  wireless_standby_time Boolean?
+  connectionType        String?
+  connectors            String?
+  bluetooth             String?
+  noise_cancelling      String?
+  sound_isolating       String?
+  warranty              String?
+  storage               String?
+
+  productId  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@map("_products_details")
 }
 
 model Cart {
