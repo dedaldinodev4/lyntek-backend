@@ -4,6 +4,7 @@ import { UpdateProductDetailDto } from './dto/update-product-detail.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { ProductsService } from 'src/products/products.service';
 import type { ProductDetail } from './entities/product-detail.entity';
+import type { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Injectable()
 export class ProductDetailsService {
@@ -25,11 +26,30 @@ export class ProductDetailsService {
     return productDetail;
   }
 
-  async findAll(): Promise<ProductDetail[]> {
-    const productDetails = await this.prisma.productDetails.findMany({
-      orderBy: { created_at: 'desc' }
-    })
-    return productDetails;
+  async findAll(pagination: PaginationDto): Promise<any> {
+    const { page, limit} = pagination;
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const [items, total] = await Promise.all([
+      this.prisma.productDetails.findMany({
+        skip,
+        take: limitNumber,
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.productDetails.count(),
+    ]);
+
+    return {
+      data: items,
+      meta: {
+        total,
+        page: pageNumber,
+        lastPage: Math.ceil(total / limitNumber),
+        limit: limitNumber,
+      },
+    };
   }
 
   async findByProduct(productId: string): Promise<ProductDetail | Error> {
