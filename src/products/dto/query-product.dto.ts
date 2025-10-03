@@ -1,8 +1,7 @@
-
+import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min, IsString } from 'class-validator';
 
-export class PaginationDto {
+export class ProductQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -21,5 +20,13 @@ export class PaginationDto {
 
   @IsOptional()
   @IsString()
-  sort?: string; 
+  sort?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  minPrice?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  maxPrice?: number;
 }

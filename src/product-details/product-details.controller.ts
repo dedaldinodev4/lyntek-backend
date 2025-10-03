@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, Put, Version, Query } from 
 import { ProductDetailsService } from './product-details.service';
 import { CreateProductDetailDto } from './dto/create-product-detail.dto';
 import { UpdateProductDetailDto } from './dto/update-product-detail.dto';
-import type { PaginationDto } from 'src/common/dtos/pagination.dto';
+
 
 @Controller('products_details')
 export class ProductDetailsController {
@@ -16,8 +16,8 @@ export class ProductDetailsController {
 
   @Version('1')
   @Get()
-  findAll(@Query() pagination: PaginationDto) {
-    return this.productDetailsService.findAll(pagination);
+  findAll() {
+    return this.productDetailsService.findAll();
   }
 
   @Version('1')

@@ -3,8 +3,10 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { CategoriesService } from 'src/categories/categories.service';
-import { Product } from './entities/product.entity';
+import { Product, type IProductPaginated } from './entities/product.entity';
 import { BrandsService } from 'src/brands/brands.service';
+import type { ProductQueryDto } from './dto/query-product.dto';
+import { parseNumberParam } from 'src/utils/parseNumber';
 
 @Injectable()
 export class ProductsService {
@@ -51,17 +53,64 @@ export class ProductsService {
     return product;
   }
 
-  async findAll(): Promise<Product[]> {
-    const products = await this.prisma.product.findMany({
-      include: { 
-        brand: true,
-        category: true,
-        images: { orderBy: { created_at: 'asc' }},
-        reviews: true,
-        variants: true, 
-      }
-    })
-    return products;
+  async findAll(query: ProductQueryDto): Promise<IProductPaginated> {
+
+    const { page, limit, search, sort, minPrice, maxPrice } = query;
+
+    const currentPage = parseNumberParam(page) || 1;
+    const perPage = parseNumberParam(limit) || 10;
+    const skip = (currentPage - 1) * perPage;
+    const where: any = {};
+
+    //* Dynamic Filters *//
+    if (search) {
+      where.OR = [
+        { name: { contains: search} },
+        { description: { contains: search } },
+      ];
+    }
+
+    //* Dynamic Sort *//
+    let orderBy: any = { created_at: 'desc' }; 
+    if (sort) {
+      const [field, direction] = sort.split(':');
+      orderBy = { [field]: direction === 'asc' ? 'asc' : 'desc' };
+    }
+
+    const [items, totalResults] = await Promise.all([
+      this.prisma.product.findMany({
+        include: { 
+          brand: true,
+          category: true,
+          images: { orderBy: { created_at: 'asc' }},
+          reviews: true,
+          variants: true, 
+        },
+        skip,
+        take: perPage,
+        where,
+        orderBy,
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(totalResults / perPage);
+    const totalCurrentResults = items.length;
+
+    return {
+      data: items,
+      paginator: {
+        currentPage,
+        pages: totalPages,
+        nextPage: currentPage < totalPages ? currentPage + 1 : null,
+        prevPage: currentPage > 1 ? currentPage - 1 : null,
+        perPage,
+        totalResults,
+        totalCurrentResults,
+        lastPage: Math.ceil(totalResults/perPage),
+      },
+    };
+   
   }
 
   async findOne(id: string): Promise<Product | Error> {

@@ -11,11 +11,27 @@ import { map } from 'rxjs/operators';
 export class TransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) => ({
-        status: 'success',
-        timestamp: new Date().toISOString(),
-        data,
-      })),
+      map((response) => {
+        const request = context.switchToHttp().getRequest();
+        if (response && response.data && response.paginator) {
+          return {
+            success: true,
+            message: response.message || 'Data retrieved successfully',
+            data: response.data,
+            paginator: response.paginator,
+            timestamp: new Date().toISOString(),
+            path: request.url,
+          };
+        }
+
+        return {
+          success: true,
+          message: response?.message || 'Request successful',
+          data: response?.data ?? response,
+          timestamp: new Date().toISOString(),
+          path: request.url,
+        };
+      }),
     );
   }
 }
