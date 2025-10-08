@@ -47,6 +47,7 @@ export class ProductsService {
         images: true,
         reviews: true,
         variants: true, 
+        productDetails: true,
       }
     })
 
@@ -85,6 +86,7 @@ export class ProductsService {
           images: { orderBy: { created_at: 'asc' }},
           reviews: true,
           variants: true, 
+          productDetails: true,
         },
         skip,
         take: perPage,
@@ -122,6 +124,7 @@ export class ProductsService {
         images: true,
         reviews: true,
         variants: true, 
+        productDetails: true,
       }
     })
 
