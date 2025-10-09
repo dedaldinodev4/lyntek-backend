@@ -18,6 +18,8 @@ export class CreateProductDetailDto {
   wireless?: boolean;
   wireless_standby_time?: boolean;
   connectionType?: string;
+  specifications?: string;
+  careful?: string;
   connectors?: string;
   bluetooth?: boolean;
   noise_cancelling?: boolean;

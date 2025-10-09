@@ -120,6 +120,8 @@ model ProductDetails {
   front_camera          String?
   battery               String?
   frequency_response    String?
+  specifications        String?
+  careful               String?
   microphone            Boolean?
   wireless              Boolean?
   wireless_standby_time Boolean?

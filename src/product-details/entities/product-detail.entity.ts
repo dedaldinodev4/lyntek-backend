@@ -20,6 +20,8 @@ export class ProductDetail {
   wireless_standby_time: boolean | null;
   connectionType: string | null;
   connectors: string | null;
+  specifications: string | null;
+  careful: string | null;
   bluetooth: boolean | null;
   noise_cancelling: boolean | null;
   sound_isolating: boolean | null;
