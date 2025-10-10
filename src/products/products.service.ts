@@ -59,7 +59,7 @@ export class ProductsService {
     const { page, limit, search, sort, minPrice, maxPrice } = query;
 
     const currentPage = parseNumberParam(page) || 1;
-    const perPage = parseNumberParam(limit) || 10;
+    const perPage = parseNumberParam(limit) || 12;
     const skip = (currentPage - 1) * perPage;
     const where: any = {};
 
