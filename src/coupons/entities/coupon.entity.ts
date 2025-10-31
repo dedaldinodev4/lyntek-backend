@@ -12,3 +12,11 @@ export class Coupon {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface ICouponValidateResponse {
+  valid: boolean;
+  code: string;
+  value: number;
+  type: string;
+  message: string;
+}
