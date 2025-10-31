@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCouponUsageDto } from './dto/create-coupon-usage.dto';
 import { UpdateCouponUsageDto } from './dto/update-coupon-usage.dto';
-import { CouponUsage } from './entities/coupon-usage.entity';
+import { CouponUsage, type CouponUsageTotal } from './entities/coupon-usage.entity';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { CouponsService } from 'src/coupons/coupons.service';
 import { UsersService } from 'src/users/users.service';
@@ -36,6 +36,16 @@ export class CouponUsagesService {
   async findAll(): Promise<CouponUsage[]> {
     const couponUsages = await this.prisma.couponUsage.findMany({})
     return couponUsages;
+  }
+
+  async totalUsages(couponId: string): Promise<CouponUsageTotal> {
+    const usages = await this.prisma.couponUsage.findMany({
+      where: { couponId }
+    })
+    const total = usages.reduce((s, u) => s + u.count, 0);
+    return {
+      usages, total
+    }
   }
 
   async findOne(id: string): Promise<CouponUsage | Error> {

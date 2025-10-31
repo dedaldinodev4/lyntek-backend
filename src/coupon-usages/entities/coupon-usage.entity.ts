@@ -5,3 +5,8 @@ export class CouponUsage {
   count: number;
   last_used: Date;
 }
+
+export type CouponUsageTotal = {
+  total: number;
+  usages: CouponUsage[] | null;
+}

@@ -25,6 +25,12 @@ export class CouponUsagesController {
     return this.couponUsagesService.findOne(id);
   }
 
+  @Get('totalUsages/:couponId')
+  @Version('1')
+  totalUsages(@Param('couponId') couponId: string) {
+    return this.couponUsagesService.totalUsages(couponId);
+  }
+
   @Put(':id')
   @Version('1')
   update(@Param('id') id: string, @Body() data: UpdateCouponUsageDto) {
