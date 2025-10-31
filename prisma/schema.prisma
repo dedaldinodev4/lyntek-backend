@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//* Users *//
 model User {
   id         String    @id @default(uuid())
   email      String    @unique
@@ -27,10 +28,12 @@ model User {
   orders     Order[]
   addresses  Address[]
   reviews    Review[]
+  wishlist   Wishlist?
 
   @@map("_users")
 }
 
+//* Products *//
 model Product {
   id             String           @id @default(uuid())
   name           String
@@ -48,6 +51,7 @@ model Product {
   orderItems     OrderItem[]
   reviews        Review[]
   productDetails ProductDetails[]
+  wishlistItems  WishlistItem[]
 
   @@map("_products")
 }
@@ -69,7 +73,7 @@ model ProductVariant {
   @@map("_products_variants")
 }
 
-//*  Coupon *//
+//* Coupons *//
 model Coupon {
   id            String        @id @default(uuid())
   code          String        @unique
@@ -100,6 +104,7 @@ model CouponUsage {
   @@map("_coupon_usages")
 }
 
+//* Categories *//
 model Category {
   id         String    @id @default(uuid())
   name       String    @unique
@@ -112,6 +117,7 @@ model Category {
   @@map("_categories")
 }
 
+//* Brands *//
 model Brand {
   id         String    @id @default(uuid())
   name       String    @unique
@@ -174,6 +180,7 @@ model ProductDetails {
   @@map("_products_details")
 }
 
+//* Carts *//
 model Cart {
   id         String     @id @default(uuid())
   user       User       @relation(fields: [userId], references: [id])
@@ -198,6 +205,31 @@ model CartItem {
   @@map("_carts_items")
 }
 
+//*  Wishlist *//
+model Wishlist {
+  id         String         @id @default(uuid())
+  user       User           @relation(fields: [userId], references: [id])
+  userId     String         @unique
+  items      WishlistItem[]
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+
+  @@map("_wishlists")
+}
+
+model WishlistItem {
+  id         String   @id @default(uuid())
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id])
+  wishlistId String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("_wishlists_items")
+}
+
+//* Orders *//
 model Order {
   id             String      @id @default(uuid())
   user           User        @relation(fields: [userId], references: [id])
@@ -248,6 +280,7 @@ model OrderItem {
   @@map("_orders_items")
 }
 
+//* Payments *//
 model Payment {
   id         String          @id @default(uuid())
   order      Order           @relation(fields: [orderId], references: [id])
@@ -290,6 +323,7 @@ model PaymentMethod {
   @@map("_payments_methods")
 }
 
+//* Shipment *//
 model Shipment {
   id                String         @id @default(uuid())
   order             Order          @relation(fields: [orderId], references: [id])
@@ -307,6 +341,7 @@ model Shipment {
   @@map("_shipments")
 }
 
+//* Reviews *//
 model Review {
   id         String   @id @default(uuid())
   product    Product  @relation(fields: [productId], references: [id])
@@ -321,6 +356,7 @@ model Review {
   @@map("_reviews")
 }
 
+//* Carrier *//
 model Carrier {
   id         String     @id @default(uuid())
   name       String
