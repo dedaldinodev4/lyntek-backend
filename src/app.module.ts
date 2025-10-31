@@ -26,6 +26,9 @@ import { PaymentProvidersModule } from './payment-providers/payment-providers.mo
 import { PaymentMethodsModule } from './payment-methods/payment-methods.module';
 import { CarrierModule } from './carrier/carrier.module';
 import { ProductDetailsModule } from './product-details/product-details.module';
+import { CouponsModule } from './coupons/coupons.module';
+import { CouponUsagesModule } from './coupon-usages/coupon-usages.module';
+
 
 @Module({
   imports: [
@@ -34,7 +37,7 @@ import { ProductDetailsModule } from './product-details/product-details.module';
     CartItemsModule, ProductsModule, ProductImagesModule, 
     AddressesModule, OrdersModule, PaymentsModule, ShipmentsModule, 
     ReviewsModule, OrderItemsModule, BrandsModule, ProductVariantsModule, 
-    PaymentProvidersModule, PaymentMethodsModule, CarrierModule, ProductDetailsModule
+    PaymentProvidersModule, PaymentMethodsModule, CarrierModule, ProductDetailsModule, CouponsModule, CouponUsagesModule
   ],
   controllers: [AppController],
   providers: [
