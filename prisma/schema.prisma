@@ -53,18 +53,51 @@ model Product {
 }
 
 model ProductVariant {
-  id         String   @id @default(uuid())
-  sku        String   @unique
-  title      String
-  price      Float
-  stock      Int
-  productId  String
-  product    Product  @relation(fields: [productId], references: [id])
-  currency   String   @default("AKZ")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id              String    @id @default(uuid())
+  sku             String    @unique
+  title           String
+  price           Float
+  stock           Int
+  productId       String
+  product         Product   @relation(fields: [productId], references: [id])
+  currency        String    @default("AKZ")
+  discountPercent Float     @default(0) // NEW: percent e.g. 10 for 10%
+  offerExpires_at DateTime? // NEW: optional expiry for the offer
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
 
   @@map("_products_variants")
+}
+
+//*  Coupon *//
+model Coupon {
+  id            String        @id @default(uuid())
+  code          String        @unique
+  type          String        @default("percent") // "percent" | "fixed"
+  value         Float
+  minValue      Float         @default(0)
+  expires_at    DateTime
+  usage_limit   Int?
+  perUser_limit Int?
+  active        Boolean       @default(true)
+  description   String?
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  usages        CouponUsage[]
+
+  @@map("_coupons")
+}
+
+model CouponUsage {
+  id        String   @id @default(uuid())
+  couponId  String
+  userId    String
+  count     Int      @default(1)
+  last_used DateTime @default(now())
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+
+  @@unique([couponId, userId])
+  @@map("_coupon_usages")
 }
 
 model Category {
@@ -166,18 +199,23 @@ model CartItem {
 }
 
 model Order {
-  id         String      @id @default(uuid())
-  user       User        @relation(fields: [userId], references: [id])
-  userId     String
-  items      OrderItem[]
-  address    Address     @relation(fields: [addressId], references: [id])
-  addressId  String
-  total      Float
-  payment    Payment?
-  shipment   Shipment?
-  status     OrderStatus @default(PENDING)
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
+  id             String      @id @default(uuid())
+  user           User        @relation(fields: [userId], references: [id])
+  userId         String
+  items          OrderItem[]
+  address        Address     @relation(fields: [addressId], references: [id])
+  addressId      String
+  total          Float
+  couponCode     String?
+  discountType   String?
+  discountValue  Float?
+  discountAmount Float?      @default(0)
+  finalTotal     Float?
+  payment        Payment?
+  shipment       Shipment?
+  status         OrderStatus @default(PENDING)
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
 
   @@map("_orders")
 }
