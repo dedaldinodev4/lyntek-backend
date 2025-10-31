@@ -4,5 +4,7 @@ export class CreateProductVariantDto {
   price: number;
   stock: number;
   currency: string;
+  discountPercent: number;
+  offerExpires_at?: Date;
   productId: string;
 }

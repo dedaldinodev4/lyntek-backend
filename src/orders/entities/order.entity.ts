@@ -5,6 +5,11 @@ export class Order {
   userId: string;
   addressId: string;
   total: number;
+  couponCode: string | null;
+  discountType: string | null;
+  discountValue: number | null;
+  discountAmount: number | null;
+  finalTotal: number | null;
   status: OrderStatus;
   created_at: Date;
   updated_at: Date;
