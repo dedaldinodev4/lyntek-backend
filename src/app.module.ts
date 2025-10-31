@@ -28,6 +28,8 @@ import { CarrierModule } from './carrier/carrier.module';
 import { ProductDetailsModule } from './product-details/product-details.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { CouponUsagesModule } from './coupon-usages/coupon-usages.module';
+import { WishlistsModule } from './wishlists/wishlists.module';
+import { WishlistItemsModule } from './wishlist-items/wishlist-items.module';
 
 
 @Module({
@@ -37,7 +39,7 @@ import { CouponUsagesModule } from './coupon-usages/coupon-usages.module';
     CartItemsModule, ProductsModule, ProductImagesModule, 
     AddressesModule, OrdersModule, PaymentsModule, ShipmentsModule, 
     ReviewsModule, OrderItemsModule, BrandsModule, ProductVariantsModule, 
-    PaymentProvidersModule, PaymentMethodsModule, CarrierModule, ProductDetailsModule, CouponsModule, CouponUsagesModule
+    PaymentProvidersModule, PaymentMethodsModule, CarrierModule, ProductDetailsModule, CouponsModule, CouponUsagesModule, WishlistsModule, WishlistItemsModule
   ],
   controllers: [AppController],
   providers: [
