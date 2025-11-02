@@ -65,7 +65,7 @@ model ProductVariant {
   productId       String
   product         Product   @relation(fields: [productId], references: [id])
   currency        String    @default("AKZ")
-  discountPercent Float     @default(0) // NEW: percent e.g. 10 for 10%
+  discountPercent Int     @default(0) // NEW: percent e.g. 10 for 10%
   offerExpires_at DateTime? // NEW: optional expiry for the offer
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
