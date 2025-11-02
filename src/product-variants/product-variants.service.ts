@@ -4,6 +4,7 @@ import { UpdateProductVariantDto } from './dto/update-product-variant.dto';
 import { ProductsService } from 'src/products/products.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { ProductVariant } from './entities/product-variant.entity';
+import type { ISetProductVariantOffer } from './dto/set-offer-product-variant';
 
 @Injectable()
 export class ProductVariantsService {
@@ -68,6 +69,43 @@ export class ProductVariantsService {
       where: { id }
     })
     return updateVariant;
+  }
+
+  async setOffer(id: string, data: ISetProductVariantOffer): Promise<ProductVariant | Error> {
+    
+    const { offerExpires_at, discountPercent } = data;
+    const variantExist = await this.findOne(id)
+    if (!variantExist) {
+      throw new NotFoundException('Variant does not exist.')
+    }
+
+    const setOfferVariant = await this.prisma.productVariant.update({
+      data: {
+        discountPercent,
+        offerExpires_at: offerExpires_at ? new Date(offerExpires_at): null
+      },
+      where: { id }
+    })
+
+    return setOfferVariant;
+  }
+
+  async clearOffer(id: string): Promise<ProductVariant | Error> {
+  
+    const variantExist = await this.findOne(id)
+    if (!variantExist) {
+      throw new NotFoundException('Variant does not exist.')
+    }
+
+    const clearOfferVariant = await this.prisma.productVariant.update({
+      data: {
+        discountPercent: 0,
+        offerExpires_at: null
+      },
+      where: { id }
+    })
+
+    return clearOfferVariant;
   }
 
   async delete (id: string): Promise<void> {
